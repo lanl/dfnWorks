@@ -124,8 +124,5 @@ DFN.add_fracture_family(shape="ell",
 
 DFN.make_working_directory(delete=True)
 DFN.check_input()
-exit() 
-
-
 DFN.create_network()
 DFN.output_report()

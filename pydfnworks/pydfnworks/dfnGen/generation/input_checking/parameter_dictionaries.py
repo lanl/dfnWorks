@@ -954,21 +954,6 @@ def load_parameters(self):
             'description':
             'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
         },
-        'rOrienationDistribution':
-        {
-            'type':
-            str,
-            'list':
-            True,
-            'required':
-            False,
-            'list_length':
-            None,
-            'value':
-            None,
-            'description':
-            'See dfnGen documenation https://dfnworks.lanl.gov/dfngen.html for more details'
-        },
         'rkappa': {
             'type':
             float,

@@ -30,7 +30,7 @@ setup(
         "Operating System :: OS Independent",
         "License :: OSI Approved :: BSD License",
     ],
-    python_requires='>=3.9',
+    python_requires='>=3.10',
     install_requires = [
         "numpy",
         "h5py",
@@ -40,7 +40,7 @@ setup(
         "fpdf",
         "mplstereonet",
         "seaborn",
-        "pyvtk",
         "mpmath",
+        "pandas",
     ],
 )

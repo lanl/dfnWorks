@@ -1,21 +1,21 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome to dfnWorks 2.8 documentation! &mdash; dfnWorks 2.7 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+  <title>Welcome to dfnWorks documentation! &mdash; dfnWorks 2.12.2 (Released 16-11-2026) documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
   
-        <script src="_static/jquery.js?v=5d32c60e"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=ab527d87"></script>
-        <script src="_static/doctools.js?v=888ff710"></script>
-        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=430d9000"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -34,9 +34,6 @@
             dfnWorks
               <img src="_static/dfnworks_logo.png" class="logo" alt="Logo"/>
           </a>
-              <div class="version">
-                2.7, LANL, Docs: LA-UR-17-22216, Software: LA-CC-17-027
-              </div>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
     <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
@@ -48,7 +45,7 @@
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Welcome To dfnWorks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="applications.html">Example Applications</a></li>
-<li class="toctree-l1"><a class="reference internal" href="setup.html">Setting and Running up dfnWorks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup and Running dfnWorks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pydfnworks.html">pydfnworks: the dfnWorks python package</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pydfnGen.html">pydfnworks: dfnGen</a></li>
@@ -59,9 +56,12 @@
 <li class="toctree-l1"><a class="reference internal" href="dfngen.html">dfnGen - C++ Generation Code</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dfnflow.html">dfnFlow</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dfntrans.html">dfnTrans</a></li>
-<li class="toctree-l1"><a class="reference internal" href="output.html">Run Files</a></li>
+<li class="toctree-l1"><a class="reference internal" href="output.html">File Descriptions</a></li>
 <li class="toctree-l1"><a class="reference internal" href="publications.html">dfnWorks Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gallery.html">dfnWorks Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_intro.html">dfnWorks Introduction and Beginner Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_TPL.html">dfnWorks Tutorial for Truncated Power-Law (TPL)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tpl_paraview_examples.html">TPL Tutorial: Paraview Display Examples</a></li>
 </ul>
 
         </div>
@@ -78,7 +78,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Welcome to dfnWorks 2.8 documentation!</li>
+      <li class="breadcrumb-item active">Welcome to dfnWorks documentation!</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/index_docs.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -88,8 +88,9 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="welcome-to-dfnworks-2-8-documentation">
-<h1>Welcome to dfnWorks 2.8 documentation!<a class="headerlink" href="#welcome-to-dfnworks-2-8-documentation" title="Link to this heading"></a></h1>
+  <section id="welcome-to-dfnworks-documentation">
+<h1>Welcome to dfnWorks documentation!<a class="headerlink" href="#welcome-to-dfnworks-documentation" title="Link to this heading"></a></h1>
+<p>This documentation is for dfnWorks version 2.12.2 (Released 16-11-2026).</p>
 <p>Contents:</p>
 <div class="toctree-wrapper compound">
 <ul>
@@ -97,7 +98,10 @@
 <li class="toctree-l2"><a class="reference internal" href="intro.html#obtaining-dfnworks">Obtaining dfnWorks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="intro.html#citing-dfnworks">Citing dfnWorks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="intro.html#versions">Versions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="intro.html#v2-8-current">v2.8 - Current</a></li>
+<li class="toctree-l3"><a class="reference internal" href="intro.html#v2-12-current-v2-12-2">v2.12 - Current (v2.12.2)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="intro.html#v2-10">v2.10</a></li>
+<li class="toctree-l3"><a class="reference internal" href="intro.html#v2-9">v2.9</a></li>
+<li class="toctree-l3"><a class="reference internal" href="intro.html#v2-8">v2.8</a></li>
 <li class="toctree-l3"><a class="reference internal" href="intro.html#v2-7">v2.7</a></li>
 <li class="toctree-l3"><a class="reference internal" href="intro.html#v2-6">v2.6</a></li>
 <li class="toctree-l3"><a class="reference internal" href="intro.html#v2-5">v2.5</a></li>
@@ -124,27 +128,43 @@
 <li class="toctree-l2"><a class="reference internal" href="applications.html#nuclear-waste-repository">Nuclear waste repository</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="setup.html">Setting and Running up dfnWorks</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="setup.html">Setup and Running dfnWorks</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="setup.html#docker">Docker</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="setup.html#running-the-dfnworks-container">Running the dfnWorks container</a></li>
+<li class="toctree-l3"><a class="reference internal" href="setup.html#setup-the-docker-dfnworks-image">Setup the Docker dfnWorks image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="setup.html#run-the-dfnworks-container">Run the dfnWorks container</a></li>
+<li class="toctree-l3"><a class="reference internal" href="setup.html#run-the-dfnworks-container-with-mounted-volume">Run the dfnWorks container with mounted volume</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="setup.html#native-build-from-github-repository">Native build from github repository</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="setup.html#clone-the-dnfworks-repository">Clone the dnfWorks repository</a></li>
-<li class="toctree-l3"><a class="reference internal" href="setup.html#fix-paths-in-test-directory">Fix paths in test directory</a></li>
-<li class="toctree-l3"><a class="reference internal" href="setup.html#set-the-lagrit-petsc-pflotran-python-and-fehm-paths">Set the LagriT, PETSC, PFLOTRAN, Python, and FEHM paths</a></li>
+<li class="toctree-l2"><a class="reference internal" href="setup.html#native-build">Native Build</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="setup.html#clone-the-dfnworks-repository">Clone the dfnWorks repository</a></li>
+<li class="toctree-l3"><a class="reference internal" href="setup.html#set-the-lagrit-petsc-pflotran-and-fehm-paths">Set the LaGriT, PETSc, PFLOTRAN, and FEHM paths</a></li>
 <li class="toctree-l3"><a class="reference internal" href="setup.html#installing-pydfnworks">Installing pydfnworks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="setup.html#testing-your-installation">Testing your installation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="setup.html#installation-requirements-for-native-build">Installation Requirements for Native Build</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#user-defined-rects">4_user_defined_rects</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples.html#user-defined-ell-uniform">4_user_defined_ell_uniform</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#user-rects">4_user_rects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#user-ell-uniform">4_user_ell_uniform</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples.html#exp-exponentially-distributed-fracture-lengths">exp: Exponentially Distributed fracture lengths</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples.html#tpl-truncated-power-law">TPL: Truncated Power-Law</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples.html#graph-based-pruning">Graph-based pruning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples.html#additional-examples">Additional Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#example-two-fracture-case">Example: two_fracture_case</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#example-regions">Example: regions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#example-layers">Example: layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#example-polygon-domain-boundary">Example: polygon_domain_boundary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#example-bingham-distribution">Example: bingham_distribution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#example-calibrate-p32-from-p10">Example: calibrate_p32_from_p10</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#example-graph-transport">Example: graph_transport</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#example-tdrw">Example: tdrw</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#example-finite-matrix-diffusion">Example: finite_matrix_diffusion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#example-udfm">Example: udfm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples.html#example-mapdfn">Example: mapdfn</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="pydfnworks.html">pydfnworks: the dfnWorks python package</a><ul>
@@ -157,7 +177,15 @@
 <li class="toctree-l3"><a class="reference internal" href="pydfnworks.html#prune-file">prune_file</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pydfnworks.html#flow-solver">flow_solver</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pydfnworks.html#cell-based-aperture">cell_based_aperture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydfnworks.html#store-polygon-data">store_polygon_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydfnworks.html#pickle-file">pickle_file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydfnworks.html#log-filename">log_filename</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydfnworks.html#log-time">log_time</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pydfnworks.html#additional-arguments">additional arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydfnworks.html#random-seeds">Random Seeds</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydfnworks.html#pydfnworks.general.general_functions.set_seed"><code class="docutils literal notranslate"><span class="pre">set_seed()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="pydfnworks.html#pydfnworks-modules">pydfnWorks : Modules</a></li>
@@ -172,7 +200,10 @@
 <li class="toctree-l3"><a class="reference internal" href="pydfnGen.html#print-parameter-information">Print Parameter Information</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pydfnGen.html#processing-generator-input">Processing Generator Input</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pydfnGen.html#module-pydfnworks.dfnGen.generation.generator">Running the Generator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydfnGen.html#processing-generator-output">Processing Generator Output</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pydfnGen.html#module-pydfnworks.dfnGen.generation.output_report.gen_output">Analysis of Generated DFN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydfnGen.html#fracture-orientations">Fracture Orientations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydfnGen.html#fracture-intensity-p21">Fracture Intensity (P21)</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pydfnGen.html#additional-information-on-the-modification-of-hydraulic-properties-of-the-dfn">Additional Information on the Modification of Hydraulic Properties of the DFN</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pydfnGen.html#module-pydfnworks.dfnGen.generation.stress">Modification of hydraulic properties of the DFN based on background stress field</a></li>
 </ul>
@@ -188,6 +219,9 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="pydfnGen.html#module-pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_ecpm">Map-DFN upscaling</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="pydfnGen.html#pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_ecpm.mapdfn_ecpm"><code class="docutils literal notranslate"><span class="pre">mapdfn_ecpm()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydfnGen.html#pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_tag_cells.mapdfn_tag_cells"><code class="docutils literal notranslate"><span class="pre">mapdfn_tag_cells()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydfnGen.html#pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_upscale.mapdfn_upscale"><code class="docutils literal notranslate"><span class="pre">mapdfn_upscale()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydfnGen.html#pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_effective_perm.mapdfn_effective_perm"><code class="docutils literal notranslate"><span class="pre">mapdfn_effective_perm()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="pydfnGen.html#dfm">DFM</a><ul>
@@ -198,18 +232,25 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="pydfnFlow.html">pydfnworks: dfnFlow</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="pydfnFlow.html#module-pydfnworks.dfnFlow.flow">Running Flow : General</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="pydfnFlow.html#pydfnworks.dfnFlow.flow.create_dfn_flow_links"><code class="docutils literal notranslate"><span class="pre">create_dfn_flow_links()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="pydfnFlow.html#pydfnworks.dfnFlow.flow.dfn_flow"><code class="docutils literal notranslate"><span class="pre">dfn_flow()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="pydfnFlow.html#pydfnworks.dfnFlow.flow.set_flow_solver"><code class="docutils literal notranslate"><span class="pre">set_flow_solver()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydfnFlow.html#pydfnworks.dfnFlow.flow.dfn_flow"><code class="docutils literal notranslate"><span class="pre">dfn_flow()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydfnFlow.html#pydfnworks.dfnFlow.flow.create_dfn_flow_links"><code class="docutils literal notranslate"><span class="pre">create_dfn_flow_links()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="pydfnFlow.html#module-pydfnworks.dfnFlow.pflotran">Running Flow: PFLOTRAN</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="pydfnFlow.html#pydfnworks.dfnFlow.pflotran.lagrit2pflotran"><code class="docutils literal notranslate"><span class="pre">lagrit2pflotran()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="pydfnFlow.html#pydfnworks.dfnFlow.pflotran.parse_pflotran_vtk_python"><code class="docutils literal notranslate"><span class="pre">parse_pflotran_vtk_python()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydfnFlow.html#pydfnworks.dfnFlow.pflotran.zone2ex"><code class="docutils literal notranslate"><span class="pre">zone2ex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydfnFlow.html#pydfnworks.dfnFlow.pflotran.write_perms_and_correct_volumes_areas"><code class="docutils literal notranslate"><span class="pre">write_perms_and_correct_volumes_areas()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydfnFlow.html#pydfnworks.dfnFlow.pflotran.dump_h5_files"><code class="docutils literal notranslate"><span class="pre">dump_h5_files()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="pydfnFlow.html#pydfnworks.dfnFlow.pflotran.pflotran"><code class="docutils literal notranslate"><span class="pre">pflotran()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="pydfnFlow.html#pydfnworks.dfnFlow.pflotran.pflotran_cleanup"><code class="docutils literal notranslate"><span class="pre">pflotran_cleanup()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="pydfnFlow.html#pydfnworks.dfnFlow.pflotran.write_perms_and_correct_volumes_areas"><code class="docutils literal notranslate"><span class="pre">write_perms_and_correct_volumes_areas()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="pydfnFlow.html#pydfnworks.dfnFlow.pflotran.zone2ex"><code class="docutils literal notranslate"><span class="pre">zone2ex()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydfnFlow.html#pydfnworks.dfnFlow.pflotran.parse_pflotran_vtk_python"><code class="docutils literal notranslate"><span class="pre">parse_pflotran_vtk_python()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydfnFlow.html#pydfnworks.dfnFlow.pflotran.parse_pflotran_h5"><code class="docutils literal notranslate"><span class="pre">parse_pflotran_h5()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydfnFlow.html#mesh-geometry-checks-uge">Mesh Geometry Checks (UGE)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydfnFlow.html#contents">Contents</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydfnFlow.html#pydfnworks.dfnFlow.uge_tools.correct_uge_file"><code class="docutils literal notranslate"><span class="pre">correct_uge_file()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="pydfnFlow.html#module-pydfnworks.dfnFlow.fehm">Running Flow: FEHM</a><ul>
@@ -225,41 +266,51 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="pydfnTrans.html">pydfnworks: dfnTrans</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="pydfnTrans.html#module-pydfnworks.dfnTrans.transport">Running Transport Simulations</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="pydfnTrans.html#pydfnworks.dfnTrans.transport.check_dfn_trans_run_files"><code class="docutils literal notranslate"><span class="pre">check_dfn_trans_run_files()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="pydfnTrans.html#pydfnworks.dfnTrans.transport.copy_dfn_trans_files"><code class="docutils literal notranslate"><span class="pre">copy_dfn_trans_files()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="pydfnTrans.html#pydfnworks.dfnTrans.transport.create_dfn_trans_links"><code class="docutils literal notranslate"><span class="pre">create_dfn_trans_links()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="pydfnTrans.html#pydfnworks.dfnTrans.transport.dfn_trans"><code class="docutils literal notranslate"><span class="pre">dfn_trans()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydfnTrans.html#pydfnworks.dfnTrans.transport.copy_dfn_trans_files"><code class="docutils literal notranslate"><span class="pre">copy_dfn_trans_files()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="pydfnTrans.html#pydfnworks.dfnTrans.transport.run_dfn_trans"><code class="docutils literal notranslate"><span class="pre">run_dfn_trans()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydfnTrans.html#pydfnworks.dfnTrans.transport.create_dfn_trans_links"><code class="docutils literal notranslate"><span class="pre">create_dfn_trans_links()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydfnTrans.html#pydfnworks.dfnTrans.transport.check_dfn_trans_run_files"><code class="docutils literal notranslate"><span class="pre">check_dfn_trans_run_files()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="pydfnGraph.html">pydfnworks: dfnGraph</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pydfnGraph.html#module-pydfnworks.dfnGraph.dfn2graph">General Graph Functions</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="pydfnGraph.html#pydfnworks.dfnGraph.dfn2graph.add_fracture_source"><code class="docutils literal notranslate"><span class="pre">add_fracture_source()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="pydfnGraph.html#pydfnworks.dfnGraph.dfn2graph.add_fracture_target"><code class="docutils literal notranslate"><span class="pre">add_fracture_target()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="pydfnGraph.html#pydfnworks.dfnGraph.dfn2graph.create_graph"><code class="docutils literal notranslate"><span class="pre">create_graph()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="pydfnGraph.html#pydfnworks.dfnGraph.dfn2graph.dump_fractures"><code class="docutils literal notranslate"><span class="pre">dump_fractures()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="pydfnGraph.html#pydfnworks.dfnGraph.dfn2graph.dump_json_graph"><code class="docutils literal notranslate"><span class="pre">dump_json_graph()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="pydfnGraph.html#pydfnworks.dfnGraph.dfn2graph.load_json_graph"><code class="docutils literal notranslate"><span class="pre">load_json_graph()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="pydfnGraph.html#pydfnworks.dfnGraph.dfn2graph.plot_graph"><code class="docutils literal notranslate"><span class="pre">plot_graph()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="pydfnGraph.html#pydfnworks.dfnGraph.pruning.greedy_edge_disjoint"><code class="docutils literal notranslate"><span class="pre">greedy_edge_disjoint()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="pydfnGraph.html#pydfnworks.dfnGraph.pruning.k_shortest_paths_backbone"><code class="docutils literal notranslate"><span class="pre">k_shortest_paths_backbone()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pydfnGraph.html#module-pydfnworks.dfnGraph.construction.create_graph">General Graph Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydfnGraph.html#pydfnworks.dfnGraph.construction.create_graph.create_graph"><code class="docutils literal notranslate"><span class="pre">create_graph()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydfnGraph.html#pydfnworks.dfnGraph.construction.source_target.add_fracture_source"><code class="docutils literal notranslate"><span class="pre">add_fracture_source()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydfnGraph.html#pydfnworks.dfnGraph.construction.source_target.add_fracture_target"><code class="docutils literal notranslate"><span class="pre">add_fracture_target()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydfnGraph.html#pydfnworks.dfnGraph.io.serialization.dump_fractures"><code class="docutils literal notranslate"><span class="pre">dump_fractures()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydfnGraph.html#pydfnworks.dfnGraph.io.serialization.plot_graph"><code class="docutils literal notranslate"><span class="pre">plot_graph()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydfnGraph.html#pydfnworks.dfnGraph.io.serialization.dump_json_graph"><code class="docutils literal notranslate"><span class="pre">dump_json_graph()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydfnGraph.html#pydfnworks.dfnGraph.io.serialization.load_json_graph"><code class="docutils literal notranslate"><span class="pre">load_json_graph()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="pydfnGraph.html#module-pydfnworks.dfnGraph.graph_flow">Graph-Based Flow and Transport</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="pydfnGraph.html#pydfnworks.dfnGraph.graph_flow.run_graph_flow"><code class="docutils literal notranslate"><span class="pre">run_graph_flow()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="pydfnGraph.html#pydfnworks.dfnGraph.graph_transport.run_graph_transport"><code class="docutils literal notranslate"><span class="pre">run_graph_transport()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="pydfnGraph.html#module-pydfnworks.dfnGraph.algorithms.pruning">Graph Pruning</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydfnGraph.html#pydfnworks.dfnGraph.algorithms.pruning.current_flow_threshold"><code class="docutils literal notranslate"><span class="pre">current_flow_threshold()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydfnGraph.html#pydfnworks.dfnGraph.algorithms.pruning.k_shortest_paths_backbone"><code class="docutils literal notranslate"><span class="pre">k_shortest_paths_backbone()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydfnGraph.html#pydfnworks.dfnGraph.algorithms.pruning.greedy_edge_disjoint"><code class="docutils literal notranslate"><span class="pre">greedy_edge_disjoint()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydfnGraph.html#module-pydfnworks.dfnGraph.flow.graph_flow">Graph-Based Flow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydfnGraph.html#pydfnworks.dfnGraph.flow.graph_flow.run_graph_flow"><code class="docutils literal notranslate"><span class="pre">run_graph_flow()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydfnGraph.html#pydfnworks.dfnGraph.flow.metrics.compute_dQ"><code class="docutils literal notranslate"><span class="pre">compute_dQ()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydfnGraph.html#edge-conductance-models">Edge Conductance Models</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pydfnGraph.html#module-pydfnworks.dfnGraph.transport.graph_transport">Graph-Based Transport</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydfnGraph.html#pydfnworks.dfnGraph.transport.graph_transport.run_graph_transport"><code class="docutils literal notranslate"><span class="pre">run_graph_transport()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydfnGraph.html#matrix-diffusion-tdrw">Matrix Diffusion (TDRW)</a></li>
 </ul>
 </li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="pydfnWorks-well.html">pydfnworks: Well Package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="pydfnWorks-well.html#module-pydfnworks.dfnGen.well_package.wells">dfnWorks - Well Package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pydfnWorks-well.html#pydfnworks.dfnGen.well_package.wells.tag_well_in_mesh"><code class="docutils literal notranslate"><span class="pre">tag_well_in_mesh()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="pydfnWorks-well.html#pydfnworks.dfnGen.well_package.wells.find_well_intersection_points"><code class="docutils literal notranslate"><span class="pre">find_well_intersection_points()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="pydfnWorks-well.html#pydfnworks.dfnGen.well_package.wells.cleanup_wells"><code class="docutils literal notranslate"><span class="pre">cleanup_wells()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="pydfnWorks-well.html#pydfnworks.dfnGen.well_package.wells.combine_well_boundary_zones"><code class="docutils literal notranslate"><span class="pre">combine_well_boundary_zones()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="pydfnWorks-well.html#pydfnworks.dfnGen.well_package.wells.find_well_intersection_points"><code class="docutils literal notranslate"><span class="pre">find_well_intersection_points()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="pydfnWorks-well.html#pydfnworks.dfnGen.well_package.wells.tag_well_in_mesh"><code class="docutils literal notranslate"><span class="pre">tag_well_in_mesh()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -268,8 +319,12 @@
 <li class="toctree-l2"><a class="reference internal" href="dfngen.html#domain-parameters">Domain Parameters</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="dfngen.html#domainsize">domainSize</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dfngen.html#domainsizeincrease">domainSizeIncrease</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dfngen.html#domaincenter">domainCenter</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dfngen.html#polygonboundaryflag">polygonBoundaryFlag</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dfngen.html#polygonboundaryfile">polygonBoundaryFile</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dfngen.html#numoflayers">numOfLayers</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dfngen.html#layers">layers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dfngen.html#layerconformingfractures">layerConformingFractures</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dfngen.html#numofregions">numOfRegions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dfngen.html#regions">regions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dfngen.html#ignoreboundaryfaces">ignoreBoundaryFaces</a></li>
@@ -278,12 +333,15 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="dfngen.html#general-network-generation-parameters">General Network Generation Parameters</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="dfngen.html#stopcondition">stopCondition</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dfngen.html#p32-convention">p32_convention</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dfngen.html#npoly">nPoly</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dfngen.html#famprob">famProb</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dfngen.html#orientationoption">orientationOption</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dfngen.html#angleoption">angleOption</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dfngen.html#h">h</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dfngen.html#disablefram">disableFram</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dfngen.html#rfram">rFram</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dfngen.html#disableshorteningintersections">disableShorteningIntersections</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dfngen.html#printrejectreasons">printRejectReasons</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dfngen.html#rejectsperfracture">rejectsPerFracture</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dfngen.html#radiilistincrease">radiiListIncrease</a></li>
@@ -303,15 +361,24 @@
 <li class="toctree-l3"><a class="reference internal" href="dfngen.html#outputfinalradiiperfamily">outputFinalRadiiPerFamily</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="dfngen.html#fracture-orientation">Fracture Orientation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="dfngen.html#mean-orientation">Mean Orientation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dfngen.html#orientation-distribution">orientation_distribution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dfngen.html#fisher-distribution">Fisher Distribution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dfngen.html#bingham-distribution">Bingham Distribution</a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="dfngen.html#fracture-family-generation-parameters-ellipse">Fracture Family Generation Parameters: Ellipse</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="dfngen.html#ellipse-general-parameters">Ellipse: General Parameters</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dfngen.html#ellipse-fracture-orientation">Ellipse: Fracture Orientation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dfngen.html#ellipse-in-plane-rotation">Ellipse: In Plane Rotation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dfngen.html#ellipse-fracture-radius-distributions">Ellipse: Fracture Radius Distributions</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="dfngen.html#fracture-family-generation-parameters-rectangle">Fracture Family Generation Parameters: Rectangle</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="dfngen.html#rectangle-general-parameters">Rectangle: General Parameters</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dfngen.html#rectangle-fracture-orientation">Rectangle: Fracture Orientation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dfngen.html#rectangle-in-plane-rotation">Rectangle: In Plane Rotation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="dfngen.html#rectangle-fracture-radius-distributions">Rectangle: Fracture Radius Distributions</a></li>
 </ul>
 </li>
@@ -324,12 +391,15 @@
 <li class="toctree-l2"><a class="reference internal" href="dfngen.html#source-code-documentation-doxygen">Source Code Documentation (Doxygen)</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="dfnflow.html">dfnFlow</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dfnflow.html">dfnFlow</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="dfnflow.html#upscaled-udfm-meshes">Upscaled (UDFM) meshes</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="dfntrans.html">dfnTrans</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="dfntrans.html#documentation">Documentation</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="output.html">Run Files</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="output.html">File Descriptions</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="output.html#dfngen-output">dfnGen - output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="output.html#lagrit-output">LaGrit - Output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="output.html#pflotran-output">PFLOTRAN - output</a></li>
@@ -337,6 +407,54 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="publications.html">dfnWorks Publications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gallery.html">dfnWorks Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_intro.html">dfnWorks Introduction and Beginner Tutorial</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_intro.html#tutorial-prerequisites">Tutorial Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_intro.html#dfnworks-package-overview">dfnWorks Package Overview</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_intro.html#dfngen-network-generation">dfnGen: Network Generation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_intro.html#dfnflow-flow-simulation">dfnFlow: Flow Simulation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_intro.html#dfntrans-particle-tracking">dfnTrans: Particle Tracking</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_intro.html#beginner-tutorial-with-4-user-rects">Beginner Tutorial with 4_user_rects</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_intro.html#step-1-navigate-to-example-directory">Step 1. Navigate to Example Directory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_intro.html#step-2-execute-the-driver-py-script">Step 2. Execute the <cite>driver.py</cite> script</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_intro.html#step-3-understanding-the-script">Step 3. Understanding the Script</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_intro.html#step-4-verify-the-fracture-mesh">Step 4. Verify the Fracture Mesh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_intro.html#step-5-analyze-simulation-results">Step 5. Analyze Simulation Results</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_intro.html#conclusion">Conclusion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_intro.html#additional-resources">Additional Resources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tutorial_TPL.html">dfnWorks Tutorial for Truncated Power-Law (TPL)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_TPL.html#tpl-tutorial-prerequisites">TPL Tutorial Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_TPL.html#dfnworks-tpl-overview">dfnWorks TPL Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_TPL.html#set-parameters">Set Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_TPL.html#python-add-fracture-family">Python add_fracture_family()</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_TPL.html#distribution">distribution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_TPL.html#alpha">alpha</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_TPL.html#p32">p32</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_TPL.html#shape-and-radius">shape and radius</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_TPL.html#kappa-theta-phi">kappa, theta, phi</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_TPL.html#hy-variable">hy_variable</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_TPL.html#hy-function">hy_function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_TPL.html#hy-params">hy_params</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_TPL.html#network-evaluations">Network Evaluations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_TPL.html#log-report">Log Report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_TPL.html#dfngen-report">dfnGen Report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tutorial_TPL.html#visual-inspection">Visual Inspection</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_TPL.html#run-flow-model">Run Flow Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_TPL.html#run-transport-model">Run Transport Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_TPL.html#add-a-second-family">Add a Second family</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial_TPL.html#tpl-tutorial-additional-resources">TPL Tutorial Additional Resources</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tpl_paraview_examples.html">TPL Tutorial: Paraview Display Examples</a></li>
 </ul>
 </div>
 </section>
@@ -351,7 +469,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2020, LANL, LA-UR-17-22216.</p>
+    <p>&#169; Copyright 2015-2026, LANL, LA-UR-17-22216.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

@@ -22,8 +22,6 @@ DFN.params['nPoly']['value'] = 20
 DFN.params['boundaryFaces']['value'] = [1, 1, 0, 0, 0, 0]
 DFN.params['rejectsPerFracture']['value'] = 10
 DFN.params['seed']['value'] = 1
-DFN.params['keepIsolatedFractures']['value'] = True 
-
 
 DFN.add_fracture_family(shape="rect",
                         distribution="exp",
@@ -35,35 +33,17 @@ DFN.add_fracture_family(shape="rect",
                         min_radius=1.0,
                         max_radius=10.0,
                         hy_variable='permeability',
-                        hy_function='log-normal',
-                        hy_params={"mu": 1e-12,
-                                   "sigma":0.4})
+                        hy_function='constant',
+                        hy_params={"mu": 1e-12})
 
 DFN.make_working_directory(delete=True)
 DFN.check_input()
 DFN.print_domain_parameters()
 DFN.set_flow_solver("PFLOTRAN")
 DFN.create_network()
-fracture_volume = DFN.aperture * DFN.surface_area
+DFN.mesh_network()
 
-volume = DFN.params['domainSize']['value'][0] * DFN.params['domainSize']['value'][1] * DFN.params['domainSize']['value'][2]
-
-p33 = fracture_volume.sum() / volume
-
-print(p33)
-
-
-
-
-# exit() 
-
-# DFN.output_report() 
-# DFN.mesh_network()
-
-
-# exit() 
-
-# DFN.lagrit2pflotran()
-# DFN.pflotran(restart=True, restart_file=restart_file)
-# DFN.parse_pflotran_vtk_python()
-# DFN.pflotran_cleanup()
+DFN.lagrit2pflotran()
+DFN.pflotran(restart=True, restart_file=restart_file)
+DFN.parse_pflotran_vtk()
+DFN.pflotran_cleanup()

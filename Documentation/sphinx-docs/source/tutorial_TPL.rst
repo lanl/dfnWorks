@@ -26,14 +26,14 @@ The following items are covered in this Tutorial:
 
 
 
-Tutorial Prerequisites
+TPL Tutorial Prerequisites
 --------------------------
 
 - For this Tutorial you do not need to run dfnWorks. You can read through the steps for a basic understanding of the work flow. Images and output examples are included with this tutorial.
-- For install and setup instuctions, refer to the section at :ref:`pydfnWorks install <pydfnworks-setup>`.
-- This Tutorial assumes you are familiar with the basics of running dfnWorks.  These basics are covered in the Tutorial  [Introduction and Beginner Tutorial](https://lanl.github.io/dfnWorks/tutorial_intro.html) 
-- TeX Live is needed to write the PDF report summary. Local servers use ``module load texlive``
-- Paraview is an open-source visualization software and is used to create the mesh and simulation images in this document.  Instructions for downloading and installing Paraview_ can be found at http://www.paraview.org/download/ 
+- For install and setup instructions, refer to the section at :ref:`pydfnWorks install <pydfnworks-setup>`.
+- This Tutorial assumes you are familiar with the basics of running dfnWorks.  These basics are covered in the :doc:`tutorial_intro`.
+- TeX Live is needed to write the PDF report summary. On systems that use environment modules, try ``module load texlive``.
+- Paraview is an open-source visualization software and is used to create the mesh and simulation images in this document.  Instructions for downloading and installing Paraview can be found at https://www.paraview.org/download/
 
 
 
@@ -67,6 +67,7 @@ For this example there are 2 ways to run driver.py, this run will create and run
 This example will run both the flow model and particle tracks using the input files named here.
 
 .. code-block:: python
+
     jobname = os.getcwd() + "/output"
     #jobname = os.getcwd() + "/output2"
 
@@ -86,6 +87,7 @@ The parameter ``boundaryFaces`` selects domain boundaries for flow. The generati
 
 
 .. code-block:: python
+
     DFN.params['domainSize']['value'] = [15, 15, 15]
     DFN.params['h']['value'] = 0.1
 
@@ -137,20 +139,28 @@ This is a parameter used when the distribution is set to tpl. It indicates the p
 Use this parameter to define the specific scaling behavior of the fracture sizes in a power-law context. This can help model situations where smaller fractures are more common than larger ones, which is typical in many geological settings.
 
 
+log_mean and log_std
+~~~~~~~~~~~~~~~~~~~~
+
+These parameters are used when the distribution is set to log_normal. The natural log of the fracture radius is normally distributed, :math:`\ln(r) \sim \mathcal{N}(\text{log\_mean}, \text{log\_std}^2)`: log_mean is the mean of :math:`\ln(r)` (not the mean radius) and log_std is its standard deviation (not a variance). Radii outside [min_radius, max_radius] are rejected and redrawn. Before truncation, the mean radius is :math:`e^{\text{log\_mean} + \text{log\_std}^2/2}`. To target a mean radius :math:`m` and standard deviation :math:`s`, use :math:`\text{log\_mean} = \ln\left(m^2/\sqrt{m^2+s^2}\right)` and :math:`\text{log\_std} = \sqrt{\ln(1 + s^2/m^2)}`.
+
+Note that log_std is a standard deviation, whereas the ``sigma`` in the log-normal hydraulic properties (``hy_params``) is a variance.
+
+
 p32
 ~~~~~~~~~~~~~
 
 This represents the fracture intensity for the family. It is applicable when using stopCondition = 1, which typically refers to a specified density of fractures.  The value of p32 is the fracture surface area per unit volume, interpreted using the convention set by :ref:`p32_convention` (double-sided by default).
 
 
-shape and radius 
-~~~~~~~~~~~~~
+shape and radius
+~~~~~~~~~~~~~~~~~~
 
 The shape parameter defines the fracture family to **rect** rectangle or **ell** ellipse. Their sizes are set with **min_radius** and **max_radius**
 
 
 kappa, theta, phi
-~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~
 
 These parameters enable users to define density and orientations for fractures within a discrete fracture network. This family sets kappa, theta, and phi. Other scenarios may use parameters such as trend, plunge, dip, and strike. 
 
@@ -180,7 +190,7 @@ This parameter describes the relationship between the chosen hydraulic variable 
 - **correlated** : Indicates a direct relationship where the hydraulic variable changes in correlation with changes in fracture radius.
 - **semi-correlated** : Suggests a relationship where the hydraulic variable is influenced by the fracture radius but also incorporates some variability or randomness.
 - **constant** : Means that the hydraulic variable does not change with fracture radius and remains fixed at a specific value.
-- **log-normal** : Implies that the hydraulic variable follows a log-normal distribution, with values spread around a mean influenced by the fracture radius.
+- **log-normal** : Implies that the hydraulic variable follows a log-normal distribution that is independent of fracture radius.
 
 
 hy_params
@@ -191,7 +201,9 @@ This parameter provides the necessary values that define the hydraulic function 
 
 If hy_function is **correlated** : Expected syntax: {"alpha": value, "beta": value} Here, alpha defines the scaling relationship between the hydraulic variable and the fracture radius, while beta can adjust the slope of the correlation.
 
-If hy_function is **semi-correlated** : Expected syntax: {"alpha": value, "beta": value, "sigma": value} In this case, sigma adds variability to the relationship, allowing for some randomness in hydraulic properties.
+If hy_function is **semi-correlated** : Expected syntax: {"alpha": value, "beta": value, "sigma": value} In this case, sigma adds variability to the relationship, allowing for some randomness in hydraulic properties. alpha*r^beta is the median value for a fracture of radius r, and sigma is the variance of the natural log of the hydraulic variable (its standard deviation is sqrt(sigma)).
+
+If hy_function is **log-normal** : Expected syntax: {"mu": value, "sigma": value} Here, mu is the median value in physical units (e.g., 1e-4 m for aperture), not a logarithm, and sigma is the variance of the natural log of the hydraulic variable (its standard deviation is sqrt(sigma)). The arithmetic mean is mu*exp(sigma/2) and the coefficient of variation is sqrt(exp(sigma) - 1).
 
 If hy_function is **constant** : Expected syntax: {"mu": value}
 
@@ -374,7 +386,7 @@ View the mesh attributes to check parameters. The following images from Paraview
    :align: center
 
 
-You can adjust color maps and opacity for views that help display the meshed network for evaluations. Paraview is used for these views.  See more Paraview images in `tpl_paraview_examples.rst <tpl_paraview_examples.rst>`_ 
+You can adjust color maps and opacity for views that help display the meshed network for evaluations. Paraview is used for these views.  See more Paraview images in :doc:`tpl_paraview_examples`.
 
 
 Run Flow Model
@@ -385,9 +397,9 @@ The pydfnworks command ``dfn_flow()`` is used to run the simulation. This can pr
 See Module at :ref:`dfnFlow <dfnflow-chapter>` and python docs at :ref:`pydfnWorks: dfnFlow <dfnWorks-python-chapter-dfnFlow>`
 
 
-See PFLOTRAN user manaul at https://www.pflotran.org/documentation/user_guide/user_guide.html
+See PFLOTRAN user manual at https://www.pflotran.org/documentation/user_guide/user_guide.html
 
-View the PFLOTRAN input deck defined by dfnFlow_file `dfn_explicit.in`. This is a PFLOTRAN input file.  The input defines inflow and outflow regions using the *.ex boundary files written during the dfnGen step. High pressure (red) Dirichlet boundary conditions are applied on the edge of the fractures along the boundary X = -7.5, and low pressure (blue) boundary conditions are applied on the edges of the fractures at the boundary X = 7.5. 
+View the PFLOTRAN input deck defined by dfnFlow_file `dfn_explicit.in`. This is a PFLOTRAN input file.  The input defines inflow and outflow regions using the ``*.ex`` boundary files written during the dfnGen step. High pressure (red) Dirichlet boundary conditions are applied on the edge of the fractures along the boundary X = -7.5, and low pressure (blue) boundary conditions are applied on the edges of the fractures at the boundary X = 7.5. 
 
 As the driver runs PFLOTRAN you will see information about the command line calling PFLOTRAN and information about the output files.  
 
@@ -397,14 +409,15 @@ As the driver runs PFLOTRAN you will see information about the command line call
     2025-05-22 13:27:17,481 INFO --> Running: /home/jhyman/src/petsc/arch-linux-c-opt/bin/mpirun -np 12 /home/jhyman/src/pflotran/src/pflotran/pflotran -pflotranin dfn_explicit.in
     2025-05-22 13:27:22,210 INFO --> Processing file: dfn_explicit-000.vtk
     2025-05-22 13:27:22,302 INFO --> Processing file: dfn_explicit-001.vtk
-    2025-05-22 13:27:22,377 INFO --> Parsing PFLOTRAN output complete
+    2025-05-22 13:27:22,370 INFO --> Wrote 2 snapshots to pflotran_vtu_outputs/; open pflotran_vtu_outputs/dfn_explicit.pvd in ParaView
+    2025-05-22 13:27:22,377 INFO --> Converting PFLOTRAN VTK output complete
 
 
-The simulation results can be viewed with vtk files written in the directory output/parsed_vtk. The following images were created with Paraview:
+The simulation results are written to the directory output/pflotran_vtu_outputs as one ``.vtu`` file per output time and the time series ``dfn_explicit.pvd``. Open ``dfn_explicit.pvd`` in Paraview; the time slider steps through the simulation times. The following images were created with Paraview:
 
--  Read dfn_explicit-000.vtk select  Permeability at time 0
--  Read dfn_explicit-000.vtk select  Liquid Pressure at time 0
--  Read dfn_explicit-001.vtk select  Liquid Pressure at time 1
+-  At the initial time, select Permeability
+-  At the initial time, select Liquid Pressure
+-  At the final time, select Liquid Pressure
 
 
 .. figure:: figures/tpl_flow_permeability.png
@@ -496,8 +509,8 @@ Now you are familar with the main driver.py script to create a network and run s
 
 
 
-Additional Resources 
-------------------------
+TPL Tutorial Additional Resources
+-----------------------------------
 
 There are more demo runs in the `dfnWorks/examples` directory.  The first two examples are simpler than the last three so it is recommended that the user proceed in the order presented here. 
 
