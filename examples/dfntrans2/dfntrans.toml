@@ -42,10 +42,12 @@ density    = 997.73
 saturation = 1.0
 
 # ── Aperture ──────────────────────────────────────────────────────────────────
-# type: "node_file" (default) | "fracture_file" | "constant"
+# type: "fracture_file" (default) | "node_file" | "constant"
+#   fracture_file: one aperture per fracture (aperture.dat from dump_hydraulic_values)
+#   node_file:     header line, then "node_id aperture" for every mesh node
 # When type = "constant", set: constant = <value>
 [aperture]
-type = "node_file"
+type = "fracture_file"
 file = "aperture.dat"
 
 # ── TDRW (matrix diffusion) ───────────────────────────────────────────────────
