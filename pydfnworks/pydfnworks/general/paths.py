@@ -209,7 +209,12 @@ def define_paths(self):
     # if not os.path.isfile(os.environ['DFNTRANS_EXE']):
     #      self.compile_dfn_exe(os.environ['dfnworks_PATH'] + 'DFNTrans/')
     # self.valid('DFNTrans', os.environ['DFNTRANS_EXE'], "executable")
-    os.environ['DFNTRANS_EXE'] = '/Users/jhyman/src/dfnTrans2.0/build/dfntrans'
+    # dfnTrans 2.0 lives in its own repository. Take its executable from the
+    # DFNTRANS_EXE environment variable, then the DFNTRANS_EXE key in
+    # ~/.dfnworksrc, then the default local build path.
+    os.environ['DFNTRANS_EXE'] = (os.environ.get('DFNTRANS_EXE')
+                                  or env_paths.get('DFNTRANS_EXE')
+                                  or '/Users/jhyman/src/dfnTrans2.0/build/dfntrans')
     self.valid('dfntrans', os.environ['DFNTRANS_EXE'], "executable")
             
     os.environ['CORRECT_VOLUME_EXE'] = os.environ[
