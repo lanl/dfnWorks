@@ -33,6 +33,97 @@ void getPolyCoords(std::ifstream & stream, double *outAry, int nVertices) {
 }
 
 
+/**********************************************************************/
+/*! Set translation, xradius, yradius, and aspectRatio of a user polygon
+    from its vertices. Requires poly.normal to be set (unit length).
+    translation: area-weighted centroid of the planar polygon.
+    xradius: largest centroid-to-vertex distance (the enclosing radius).
+    yradius: largest in-plane extent perpendicular to the xradius direction.
+    Arg 1: Poly with vertices, numberOfNodes, and normal set */
+static void setUserPolygonCenterAndRadii(Poly &poly) {
+    const int n = poly.numberOfNodes;
+    const double *v = poly.vertices;
+    // Vertex mean, used as the fan origin
+    double m[3] = {0, 0, 0};
+
+    for (int i = 0; i < n; i++) {
+        for (int d = 0; d < 3; d++) {
+            m[d] += v[3 * i + d] / n;
+        }
+    }
+
+    // Area-weighted centroid from a triangle fan about the vertex mean
+    double c[3] = {0, 0, 0};
+    double totalArea = 0;
+
+    for (int i = 0; i < n; i++) {
+        const double *a = &v[3 * i];
+        const double *b = &v[3 * ((i + 1) % n)];
+        double ea[3] = {a[0] - m[0], a[1] - m[1], a[2] - m[2]};
+        double eb[3] = {b[0] - m[0], b[1] - m[1], b[2] - m[2]};
+        double *x = crossProduct(ea, eb);
+        double area = 0.5 * dotProduct(x, poly.normal); // signed area
+        delete[] x;
+
+        for (int d = 0; d < 3; d++) {
+            c[d] += area * (m[d] + a[d] + b[d]) / 3.0;
+        }
+
+        totalArea += area;
+    }
+
+    if (std::fabs(totalArea) > 1e-12) {
+        for (int d = 0; d < 3; d++) {
+            c[d] /= totalArea;
+        }
+    } else {
+        for (int d = 0; d < 3; d++) {
+            c[d] = m[d];
+        }
+    }
+
+    for (int d = 0; d < 3; d++) {
+        poly.translation[d] = c[d];
+    }
+
+    // xradius: farthest vertex from the centroid
+    double xr = 0;
+    int far = 0;
+
+    for (int i = 0; i < n; i++) {
+        double r = magnitude(v[3 * i] - c[0], v[3 * i + 1] - c[1], v[3 * i + 2] - c[2]);
+
+        if (r > xr) {
+            xr = r;
+            far = i;
+        }
+    }
+
+    // yradius: largest extent along the in-plane direction perpendicular
+    // to the centroid -> farthest-vertex direction
+    double e1[3] = {v[3 * far] - c[0], v[3 * far + 1] - c[1], v[3 * far + 2] - c[2]};
+    double *e2 = crossProduct(poly.normal, e1);
+    double e2mag = magnitude(e2[0], e2[1], e2[2]);
+    double yr = 0;
+
+    if (e2mag > 0) {
+        for (int i = 0; i < n; i++) {
+            double p[3] = {v[3 * i] - c[0], v[3 * i + 1] - c[1], v[3 * i + 2] - c[2]};
+            double s = std::fabs(dotProduct(p, e2)) / e2mag;
+
+            if (s > yr) {
+                yr = s;
+            }
+        }
+    }
+
+    delete[] e2;
+    poly.xradius = xr;
+    poly.yradius = yr;
+    poly.aspectRatio = (xr > 0) ? yr / xr : 1;
+}
+
+
 /****************************************************************/
 /***********  Insert User Polygon By Coord  ********************/
 /*! Inserts user polygon using defined coordinates
@@ -102,22 +193,11 @@ void insertUserPolygonByCoord(std::vector<Poly>& acceptedPoly, std::vector<IntPo
         normalize(newPoly.normal);
         //std::cout << "Normal Vector " << newPoly.normal[0]<<" "<< newPoly.normal[1] << "  " << newPoly.normal[2] << "\n";
         delete[] xProd1;
-        // Estimate radius
-        // std::cout << "estimating radius" << endl;
-        newPoly.xradius = 0.5 * magnitude(v2[0], v2[1], v2[2]); // across middle if even number of nodes
-        // across middle close to perpendicular to xradius magnitude calculation
-        int tempIdx1 = 3 * (int) (nPolyNodes / 4) ; // Get idx for node 1/4 around polygon
-        int tempIdx2 = 3 * (int) (3 * nPolyNodes / 4) ; // Get idx for node 1/4 around polygon
-        newPoly.yradius = 0.5 * euclideanDistance(&newPoly.vertices[tempIdx1], &newPoly.vertices[tempIdx2]);
-        newPoly.aspectRatio = newPoly.yradius / newPoly.xradius;
-        // Estimate translation (middle of poly)
-        // Use midpoint between 1st and and half way around polygon
-        // Note: For polygons defined by coordinates, the coordinates
-        // themselves provide the translation. We need to estimate the center
-        // of the polygon and init. the translation array
-        newPoly.translation[0] = .5 * (newPoly.vertices[0] + newPoly.vertices[midPtIdx]);
-        newPoly.translation[1] = .5 * (newPoly.vertices[1] + newPoly.vertices[midPtIdx + 1]);
-        newPoly.translation[2] = .5 * (newPoly.vertices[2] + newPoly.vertices[midPtIdx + 2]);
+        // Center, radii, and aspect ratio from the actual vertices.
+        // Downstream tools (e.g., mapdfn_ecpm) treat a fracture as a disk of
+        // radius xradius about translation, so translation must be the
+        // polygon centroid and xradius must enclose every vertex.
+        setUserPolygonCenterAndRadii(newPoly);
         
         if (domainTruncation(newPoly, domainSize) == 1) {
             // Poly completely outside domain
