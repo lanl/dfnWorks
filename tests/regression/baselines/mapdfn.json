@@ -1,14 +1,14 @@
 {
   "case": "mapdfn",
-  "created": "2026-11-16T15:05:14",
-  "git": "16b16b8a",
+  "created": "2026-11-25T11:58:33",
+  "git": "42649a41",
   "host": "pn2408477.lanl.gov",
   "metrics": {
-    "ecpm.anisotropic_k.permeabilityx_data.mean": 2.4106816487608217e-13,
+    "ecpm.anisotropic_k.permeabilityx_data.mean": 2.3322051416738617e-13,
     "ecpm.anisotropic_k.permeabilityx_data.n": 125000,
-    "ecpm.anisotropic_k.permeabilityy_data.mean": 6.135261156566482e-13,
+    "ecpm.anisotropic_k.permeabilityy_data.mean": 3.44606554776628e-13,
     "ecpm.anisotropic_k.permeabilityy_data.n": 125000,
-    "ecpm.anisotropic_k.permeabilityz_data.mean": 3.675318014074611e-13,
+    "ecpm.anisotropic_k.permeabilityz_data.mean": 2.275444415371459e-13,
     "ecpm.anisotropic_k.permeabilityz_data.n": 125000,
     "ecpm.porosity.porosity_data.mean": 0.06096133033320933,
     "ecpm.porosity.porosity_data.n": 125000,
@@ -26,17 +26,17 @@
     "gen.surface_area": 33418200.0,
     "gen.triple_points": 0,
     "pflotran.cpm_transport.dt_tran_y": 10.0,
-    "pflotran.cpm_transport.global_tracer_mol": 15.4206174,
+    "pflotran.cpm_transport.global_tracer_mol": 8.98352665,
     "pflotran.cpm_transport.global_water_mass_kg": 3721247.2,
-    "pflotran.cpm_transport.inflow_tracer_mol": 1.14600202e-12,
-    "pflotran.cpm_transport.inflow_tracer_mol_y": 2.29200405e-14,
-    "pflotran.cpm_transport.inflow_water_mass_kg": 114321095.0,
-    "pflotran.cpm_transport.inflow_water_mass_kg_y": 2286421.9,
-    "pflotran.cpm_transport.outflow_tracer_mol": -51011.2725,
-    "pflotran.cpm_transport.outflow_tracer_mol_y": -0.905584752,
-    "pflotran.cpm_transport.outflow_water_mass_kg": -114321095.0,
-    "pflotran.cpm_transport.outflow_water_mass_kg_y": -2286421.9
+    "pflotran.cpm_transport.inflow_tracer_mol": 8.80628955e-13,
+    "pflotran.cpm_transport.inflow_tracer_mol_y": 1.76125791e-14,
+    "pflotran.cpm_transport.inflow_water_mass_kg": 87848419.3,
+    "pflotran.cpm_transport.inflow_water_mass_kg_y": 1756968.39,
+    "pflotran.cpm_transport.outflow_tracer_mol": -51017.7096,
+    "pflotran.cpm_transport.outflow_tracer_mol_y": -0.847847263,
+    "pflotran.cpm_transport.outflow_water_mass_kg": -87848419.3,
+    "pflotran.cpm_transport.outflow_water_mass_kg_y": -1756968.39
   },
-  "pydfnworks": "2.12.1",
-  "time_s": 24.1
+  "pydfnworks": "2.12.2",
+  "time_s": 22.64
 }

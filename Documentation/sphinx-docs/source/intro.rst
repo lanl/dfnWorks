@@ -68,6 +68,11 @@ Next release (in development)
 - PFLOTRAN results are written as XML VTK (``.vtu``) files with a ParaView time series (``.pvd``) that carries the simulation times, in ``pflotran_vtu_outputs/`` (replaces legacy ``.vtk`` output in ``pflotran_vtk_outputs/``)
 - New ``inp2vtu`` and ``parse_pflotran_vtk``; ``inp2vtk_python`` and ``parse_pflotran_vtk_python`` are deprecated aliases
 - ``pyvtk`` is no longer a dependency
+- ``mapdfn_ecpm`` option ``cell_area`` (``"flat"``, ``"normal"``, ``"section"``) weights each fracture's porosity and permeability contribution by its area inside the cell instead of assuming a full cut across the cell face
+- ECPM anisotropic permeability computed directly as :math:`T(\mathbf{I} - \mathbf{n}\mathbf{n}^{\mathsf{T}})`; fixes the sign of the off-diagonal terms (``lump_diag_terms=True``) and NaN permeability for horizontal fractures
+- ECPM cell tagging no longer drops horizontal fractures
+- ECPM stair-step ``correction_factor`` now uses each fracture's own normal in every cell (previously the last fracture's normal was applied everywhere); results with ``correction_factor=True`` change
+- ``mapdfn_ecpm`` now defaults to ``correction_factor=False``; with the per-fracture fix the stair-step correction raises ECPM flow well above the DFN because the cell tagging already captures the stair-stepped band. Pass ``correction_factor=True`` to restore the previous default
 
 v2.12 - Current (v2.12.2)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

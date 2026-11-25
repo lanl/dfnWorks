@@ -165,8 +165,15 @@ def mapdfn_tag_cells(self, origin, num_cells, nx, ny, nz, cell_size):
         direction = np.cross([0, 0, 1], normal)
         #cosa = np.dot([0,0,1],normal)/(np.linalg.norm([0,0,1])*np.linalg.norm(normal)) #frobenius norm = length
         #above evaluates to normal[2], so:
-        angle = np.arccos(normal[2])  # everything is in radians
-        M = tr.rotation_matrix(angle, direction)
+        angle = np.arccos(np.clip(normal[2], -1.0, 1.0))  # everything is in radians
+        if np.linalg.norm(direction) < 1e-12:
+            # horizontal fracture (normal = +/- z): the rotation axis is
+            # undefined, and the fracture is already in the xy plane. The
+            # identity keeps |z| and the in-plane radius, which is all the
+            # tagging test uses.
+            M = np.eye(4)
+        else:
+            M = tr.rotation_matrix(angle, direction)
         #find fracture in domain coordinates so can look for nearby cells
         # This can be rebuilt using the polygon boundary
 

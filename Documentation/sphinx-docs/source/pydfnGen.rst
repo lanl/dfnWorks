@@ -261,8 +261,29 @@ Map-DFN upscaling
 .. automodule:: pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_tag_cells
     :members: mapdfn_tag_cells
 
+.. automodule:: pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_cell_area
+    :members: mapdfn_cell_weights, section_area
+
 .. automodule:: pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_upscale
     :members: mapdfn_upscale
+
+Fracture--cell area weighting
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Each fracture :math:`i` in a tagged cell :math:`c` contributes to the cell porosity and permeability as
+
+.. math::
+
+   \phi_c = \sum_{i \in c} w_{ic} \frac{b_i}{d}, \qquad
+   \mathbf{k}_c = \sum_{i \in c} w_{ic} \frac{T_i}{d} \left(\mathbf{I} - \mathbf{n}_i \mathbf{n}_i^{\mathsf{T}}\right),
+
+where :math:`b_i` is the aperture, :math:`T_i` the transmissivity, :math:`\mathbf{n}_i` the unit normal, :math:`d` the cell size, and :math:`w_{ic} = A_{ic}/d^2` is the area of the fracture inside the cell relative to a cell face. Only the diagonal of :math:`\mathbf{k}_c` is written unless ``lump_diag_terms=True``. The ``cell_area`` argument of ``mapdfn_ecpm`` selects the weight:
+
+- ``"flat"`` (default): :math:`w_{ic} = 1`. Every fracture is treated as a full cut across the cell face. Inclined fractures cut more cells per unit area than grid-aligned ones, so this overcounts both pore volume and conductance by a factor of up to :math:`\lVert\mathbf{n}_i\rVert_1 \le \sqrt{3}`.
+- ``"normal"``: :math:`w_{ic} = 1/\lVert\mathbf{n}_i\rVert_1`, the mean area of a plane section of a cube. Total fracture pore volume is preserved on average, and porosity and conductance are scaled by the same factor for each fracture.
+- ``"section"``: :math:`w_{ic}` is the exact area of the fracture plane inside the cell, computed in closed form from the normal and the offset of the cell center from the plane (eight terms per tagged cell). Cells that a fracture only clips at a corner receive small weights, which lowers conductance through stair-stepped fractures more than it lowers pore volume.
+
+Both ``"normal"`` and ``"section"`` treat each fracture as an infinite plane within a tagged cell, require no polygon clipping, and add negligible cost. The stair-step ``correction_factor`` (off by default) is calibrated for the flat mapping and is not applied with the other two modes.
 
 .. automodule:: pydfnworks.dfnGen.meshing.mapdfn_ecpm.mapdfn_effective_perm
     :members: mapdfn_effective_perm
